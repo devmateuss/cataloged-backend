@@ -1,10 +1,19 @@
 from django.db import models
 
 from user.models import Client
+from django.utils.html import format_html
 
 
 class Image(models.Model):
-    product_id = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True)
+    image = models.ImageField(upload_to='images/products')
+
+    def __str__(self):
+        return self.image.url
+
+    def image_tag(self):
+        return format_html('<img src="{}" />'.format(self.image.url))
+
+    image_tag.short_description = 'Image'
 
 
 class Product(models.Model):
@@ -14,3 +23,6 @@ class Product(models.Model):
     images = models.ManyToManyField(Image)
     details = models.TextField()
     caracteristc = models.TextField()
+
+    def __str__(self):
+        return self.descriptionl

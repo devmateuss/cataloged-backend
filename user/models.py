@@ -15,4 +15,8 @@ from django.db import models
 class Client(models.Model):
     name = models.CharField(max_length=255, null=False, blank=False)
     email = models.EmailField()
+
     # users = models.ManyToManyRel(User, )
+
+    def __str__(self):
+        return self.name
