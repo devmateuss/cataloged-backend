@@ -1,7 +1,7 @@
 from django.db import models
 
 from user.models import Client
-from django.utils.html import format_html
+from django.utils.html import mark_safe
 
 
 class Image(models.Model):
@@ -10,10 +10,11 @@ class Image(models.Model):
     def __str__(self):
         return self.image.url
 
-    def image_tag(self):
-        return format_html('<img src="{}" />'.format(self.image.url))
-
-    image_tag.short_description = 'Image'
+    @property
+    def thumbnail_preview(self):
+        if self.image:
+            return mark_safe('<img src="{}" width="300" height="300" />'.format(self.image.url))
+        return ""
 
 
 class Product(models.Model):
@@ -25,4 +26,15 @@ class Product(models.Model):
     caracteristc = models.TextField()
 
     def __str__(self):
-        return self.descriptionl
+        return self.description
+
+    @property
+    def images_list(self):
+        if self.images:
+            html = ""
+            for image in self.images.all():
+                html += '<img src="{}" width="300" height="300" />'.format(image.image.url) + " "
+
+            tag = '<a href="#" class="image">' + html + '</a>'
+            return mark_safe(tag)
+        return ""
